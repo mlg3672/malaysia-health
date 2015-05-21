@@ -4,12 +4,17 @@ def getpages(url,url2,day,time):
     day is a list of strings that is between url and url2
     time is a list of strings that appends to url2
     '''
+    from bs4 import BeautifulSoup
+    
     for i in day:
         for j in time:
             nurl = url + j + url2 + i
-            print(nurl)
+            soup = BeautifulSoup(nurl)
             #nfile = readHTMLtable(nurl)
-            print('data/'+i+'aqi'+j+'.csv')
+            filename = str(i)+'aqi'+str(j)+'.txt'
+            file = open("Documents/R-Projects/malaysia-health/data/"+filename, "w")
+            file.write(str(soup))
+            file.close()
 
 #test function
 url ='http://apims.doe.gov.my/v2/hourly'
