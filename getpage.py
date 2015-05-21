@@ -1,5 +1,5 @@
 from lxml import etree, html
-from bs4 import BeautifulSoup
+from lxml.html import parse
 
 def getpages(url,url2,day,time):
     '''
@@ -14,15 +14,30 @@ def getpages(url,url2,day,time):
         for j in time:
             nurl = url + j + url2 + i
             htmltree = html.parse(nurl)
-            #nfile = readHTMLtable(nurl)
             filename = str(i)+'aqi'+str(j)+'.txt'
-            file = open("Documents/R-Projects/malaysia-health/data/"+filename, "w")
+            file = open("data/"+filename, "w")
             file.write(str(etree.tostring(htmltree, pretty_print=True)))
             file.close()
 
-#test function
+def htmltab(path):
+    '''
+    path is a string of a text (html) file in local directory
+    url is a string, web address
+    '''
+
+    page = parse(path)
+    #page = html.parse(url)
+    rows = page.xpath("//tr/td")
+    data = list()
+    for row in rows:
+        data.append([c.text_content() for c in row.getchildren()])
+    return data   
+    
+#test functions
 url ='http://apims.doe.gov.my/v2/hourly'
 url2 = '.php?date='
 time = ['1','2','3','4']
-day = ['2015-04-18','2015-04-17','2015-04-16']
+day = ['2015-04-19','2015-04-17','2015-04-16']
+path = "Documents/R-Projects/malaysia-health/data/2015-04-19aqi1.txt"
 getpages(url,url2,day,time)
+htmltab(path)
